@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Cronograma de Coreografias</title>
+
+<style>
+body{
+    font-family: Arial;
+    background: #000;
+    color: #fff;
+    text-align: center;
+}
+
+h1{
+    color: gold;
+}
+
+.container{
+    width: 95%;
+    max-width: 900px;
+    margin: auto;
+}
+
+input, select, button{
+    padding: 10px;
+    margin: 5px;
+    width: 90%;
+    max-width: 300px;
+}
+
+button{
+    background: gold;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+table{
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th, td{
+    border: 1px solid gold;
+    padding: 8px;
+}
+
+.total{
+    color: #00ff88;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎬 Cronograma de Coreografias</h1>
+
+<div class="container">
+
+<select id="coreografia">
+    <option value="">Selecionar Coreografia</option>
+    <option>Beat It</option>
+    <option>Thriller</option>
+    <option>Billie Jean</option>
+    <option>Smooth Criminal</option>
+</select>
+
+<select id="aluno">
+    <option value="">Selecionar Aluno</option>
+    <option>João</option>
+    <option>Patrick</option>
+</select>
+
+<input type="number" id="horas" placeholder="Horas de ensaio (ex: 1.5)">
+
+<br>
+
+<button onclick="registrar()">Registrar Ensaio</button>
+
+<table>
+<thead>
+<tr>
+<th>Coreografia</th>
+<th>Aluno</th>
+<th>Horas</th>
+<th>Total Acumulado</th>
+</tr>
+</thead>
+
+<tbody id="tabela"></tbody>
+
+</table>
+
+<h2>Total Geral: <span id="totalGeral" class="total">0</span> horas</h2>
+
+</div>
+
+<script>
+let dados = [];
+
+function registrar(){
+    let coreo = document.getElementById("coreografia").value;
+    let aluno = document.getElementById("aluno").value;
+    let horas = parseFloat(document.getElementById("horas").value);
+
+    if(!coreo || !aluno || !horas){
+        alert("Preencha tudo!");
+        return;
+    }
+
+    dados.push({coreo, aluno, horas});
+    atualizarTabela();
+}
+
+function atualizarTabela(){
+    let tabela = document.getElementById("tabela");
+    tabela.innerHTML = "";
+
+    let somaPorCoreo = {};
+    let totalGeral = 0;
+
+    dados.forEach(d => {
+        let chave = d.coreo;
+
+        if(!somaPorCoreo[chave]){
+            somaPorCoreo[chave] = 0;
+        }
+
+        somaPorCoreo[chave] += d.horas;
+        totalGeral += d.horas;
+    });
+
+    dados.forEach(d => {
+        let linha = `
+        <tr>
+            <td>${d.coreo}</td>
+            <td>${d.aluno}</td>
+            <td>${d.horas}</td>
+            <td class="total">${somaPorCoreo[d.coreo].toFixed(2)} h</td>
+        </tr>
+        `;
+        tabela.innerHTML += linha;
+    });
+
+    document.getElementById("totalGeral").innerText = totalGeral.toFixed(2);
+}
+</script>
+
+</body>
+</html>
